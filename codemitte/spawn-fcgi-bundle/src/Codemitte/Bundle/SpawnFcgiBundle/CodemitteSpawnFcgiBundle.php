@@ -12,7 +12,7 @@ use Codemitte\Command\Restart;
  *
  * @author joshi
  */
-class SpawnFcgiBundle extends Bundle
+class CodemitteSpawnFcgiBundle extends Bundle
 {
     public function registerCommands(Application $app)
     {
