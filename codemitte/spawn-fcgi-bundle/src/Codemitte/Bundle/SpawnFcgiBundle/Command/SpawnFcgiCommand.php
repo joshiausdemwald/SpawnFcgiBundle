@@ -1,12 +1,11 @@
 <?php
 namespace Codemitte\Command\Bundle\SpawnFcgiBundle\Command;
 
-use Symfony\Component\Console\Command\Command;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputOption;
 
-abstract class SpawnFcgiCommand extends Command
+abstract class SpawnFcgiCommand extends ContainerAwareCommand
 {
     protected function configure()
     {

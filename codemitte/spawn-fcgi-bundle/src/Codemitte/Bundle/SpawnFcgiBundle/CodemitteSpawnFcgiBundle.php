@@ -14,7 +14,7 @@ use Codemitte\Command\Restart;
  */
 class CodemitteSpawnFcgiBundle extends Bundle
 {
-    public function registerCommands(Application $app)
+    /*public function registerCommands(Application $app)
     {
         $start      = new Start();
         $stop       = new Stop();
@@ -29,5 +29,5 @@ class CodemitteSpawnFcgiBundle extends Bundle
             $stop,
             $restart
         ));
-    }
+    }*/
 }
