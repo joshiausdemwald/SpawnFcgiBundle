@@ -9,7 +9,7 @@
     },
     "autoload" : {
         "psr-0" : {
-            "Codemitte\\" : "codemitte/spawn-fcgi-bundle/src/"
+            "Codemitte\\" : "src/"
         }
     }
 }
