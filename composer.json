@@ -2,6 +2,7 @@
     "name": "codemitte/spawn-fcgi-bundle",
     "description" : "Symfony 2 bundle to easily span fcgi daemons by utilizing the symfony console.",
     "version" : "0.0.1-DEV",
+    "license" : "MIT",
     "require": {
         "symfony/framework-bundle": "2.3.*",
         "symfony/console": "2.3.*"
