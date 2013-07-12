@@ -1,0 +1,13 @@
+{
+    "name": "CodemitteSpawnFcgiBundle",
+    "description" : "Symfony 2 bundle to easily span fcgi daemons by utilizing the symfony console.",
+    "require": {
+        "symfony/framework-bundle": "2.3.*",
+        "symfony/console": "2.3.*"
+    },
+    "autoload" : {
+        "psr-0" : {
+            "Codemitte\\" : "codemitte/spawn-fcgi-bundle/src/"
+        }
+    }
+}
