@@ -47,8 +47,6 @@ class CodemitteSpawnFcgiExtension extends Extension
 
         $config = $processor->process($configuration->getConfigTree(), $configs);
 
-        var_dump($config);
-
         $container->setParameter('codemitte_spawn_fcgi.fcgi_webserver_address', $config['fcgi_webserver_address']);
         $container->setParameter('codemitte_spawn_fcgi.php_fcgi_max_requests', $config['php_fcgi_max_requests']);
         $container->setParameter('codemitte_spawn_fcgi.php_fcgi_children', $config['php_fcgi_children']);
