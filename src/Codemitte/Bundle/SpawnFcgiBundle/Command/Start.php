@@ -1,5 +1,5 @@
 <?php
-namespace Codemitte\Command\Bundle\SpawnFcgiBundle\Command;
+namespace Codemitte\Bundle\SpawnFcgiBundle\Command;
 
 use \RuntimeException;
 use \BadFunctionCallException;
@@ -34,11 +34,11 @@ class Start extends SpawnFcgiCommand
             ->setName('start')
             ->setDescription('Starts the fcgi daemon');
         
-        $this->addOption('spawn-fcgi-binary', 'spawn-fcgi', InputOption::VALUE_REQUIRED, 'Path to the SPAWN-FCGI executable (usually shipped with lighty, default location /usr/bin).', '/usr/bin/spawn-fcgi');
-        $this->addOption('cgi-program', 'cgi', InputOption::VALUE_REQUIRED, 'Path to the program that should be spawned.', '/usr/bin/php-cgi');
-        $this->addOption('fcgi-socket-path', 'fcgi-socket', InputOption::VALUE_REQUIRED, 'Path to fcgi process Socket.', '/tmp/test.int.socket');
-        $this->addOption('fcgi-user', 'user', InputOption::VALUE_REQUIRED, 'The username that spawns the fcgi process.', get_current_user());
-        $this->addOption('fcgi-group', 'group', InputOption::VALUE_REQUIRED, 'The groupname that spawns the fcgi process.', get_current_user());
+        $this->addOption('spawn-fcgi-binary', 'spawn-fcgi', InputOption::VALUE_REQUIRED, 'Path to the SPAWN-FCGI executable (usually shipped with lighty, default location /usr/bin).', $this->getContainer()->getParameter('spawn_fcgi_binary'));
+        $this->addOption('cgi-program', 'cgi', InputOption::VALUE_REQUIRED, 'Path to the program that should be spawned.', '/usr/bin/php-cgi', $this->getContainer()->getParameter('cgi_program'));
+        $this->addOption('fcgi-socket-path', 'fcgi-socket', InputOption::VALUE_REQUIRED, 'Path to fcgi process Socket.', '/tmp/test.int.socket', $this->getContainer()->getParameter('fcgi_socket_path'));
+        $this->addOption('fcgi-user', 'user', InputOption::VALUE_REQUIRED, 'The username that spawns the fcgi process.', $this->getContainer()->get('fcgi_user'));
+        $this->addOption('fcgi-group', 'group', InputOption::VALUE_REQUIRED, 'The groupname that spawns the fcgi process.', $this->getContainer()->get('fcgi_group'));
         $this->addOption('allowed-env', 'env', InputOption::VALUE_OPTIONAL, 'The environment variables to pass to the fcgi handler.', null);
         $this->addOption('php-additional-ini-dir', 'phprc', InputOption::VALUE_OPTIONAL, 'Path to additional folder to search ini files from. PHP Process specific setting.', null);
         $this->addOption('php-fcgi-children', 'fcgi-children',  InputOption::VALUE_REQUIRED, 'PHP Process specific setting.', 5);

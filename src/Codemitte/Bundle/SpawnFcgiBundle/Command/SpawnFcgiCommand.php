@@ -1,5 +1,5 @@
 <?php
-namespace Codemitte\Command\Bundle\SpawnFcgiBundle\Command;
+namespace Codemitte\Bundle\SpawnFcgiBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;

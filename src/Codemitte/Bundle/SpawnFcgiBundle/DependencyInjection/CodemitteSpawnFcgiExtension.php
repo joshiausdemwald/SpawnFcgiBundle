@@ -23,11 +23,9 @@
 namespace Codemitte\Bundle\SpawnFcgiBundle\DependencyInjection;
 
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Definition\Processor;
-use Symfony\Component\Config\Resource\FileResource;
 
 /**
  * CodemitteForceExtension
@@ -37,7 +35,7 @@ use Symfony\Component\Config\Resource\FileResource;
  * @package Bundle
  * @subpackage ForceBundle
  */
-class CodemitteForceExtension extends Extension
+class CodemitteSpawnFcgiExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container)
     {

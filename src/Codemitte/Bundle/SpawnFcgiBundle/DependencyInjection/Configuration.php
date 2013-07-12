@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 code mitte GmbH - Zeughausstr. 28-38 - 50667 Cologne/Germany
+ * Copyright (C) 2012 code mitte GmbH - Zeughausstr. 28-38 -    50667 Cologne/Germany
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in the
@@ -53,16 +53,16 @@ class Configuration
 
         $rootNode
             ->children()
-                ->scalarNode('fcgi_webserver_address')->end()
-                ->integerNode('php_fcgi_max_requests')->end()
-                ->integerNode('php_fcgi_children')->end()
+                ->scalarNode('fcgi_webserver_address')->defaultValue('http://localhost:80/')->end()
+                ->integerNode('php_fcgi_max_requests')->defaultValue(1000)->end()
+                ->integerNode('php_fcgi_children')->defaultValue(4)->end()
                 ->scalarNode('php_additional_ini_dir')->end()
-                ->enumNode('allowed_env')->end()
-                ->scalarNode('spawn-fcgi-binary')->defaultValue('/usr/bin/spawn-fcgi')->end()
+                ->scalarNode('allowed_env')->end()
+                ->scalarNode('spawn_fcgi_binary')->defaultValue('/usr/bin/spawn-fcgi')->end()
                 ->scalarNode('cgi_program')->defaultValue('/usr/bin/php')->end()
-                ->scalarNode('fcgi_socket_path')->defaultValue('')->end()
-                ->scalarNode('fcgi_user')->defaultValue('')->end()
-                ->scalarNode('fcgi_group')->defaultValue('')->end()
+                ->scalarNode('fcgi_socket_path')->isRequired()->end()
+                ->scalarNode('fcgi_user')->defaultValue(get_current_user())->end()
+                ->scalarNode('fcgi_group')->defaultValue(get_current_user())->end()
             ->end()
         ;
 
