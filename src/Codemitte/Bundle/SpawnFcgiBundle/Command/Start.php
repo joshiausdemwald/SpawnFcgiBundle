@@ -2,7 +2,6 @@
 namespace Codemitte\Bundle\SpawnFcgiBundle\Command;
 
 use \RuntimeException;
-use \BadFunctionCallException;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,15 +14,7 @@ class Start extends SpawnFcgiCommand
 {
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
-        $process = new Process('command -v ' . escapeshellarg($input->getOption('spawn-fcgi-binary')));
-        
-        $process->run();
 
-        // CHECK FOR spawn-fcgi EXECUTABLE
-        if( ! $process->isSuccessful() || null === $process->getOutput())
-        {
-            throw new BadFunctionCallException('spawn-fcgi command could not be found on your system. Error: "' . $process->getErrorOutput() . '"');
-        }
     }
     
     protected function configure()
@@ -34,16 +25,16 @@ class Start extends SpawnFcgiCommand
             ->setName('start')
             ->setDescription('Starts the fcgi daemon');
         
-        $this->addOption('spawn-fcgi-binary', 'spawn-fcgi', InputOption::VALUE_REQUIRED, 'Path to the SPAWN-FCGI executable (usually shipped with lighty, default location /usr/bin).', $this->getContainer()->getParameter('spawn_fcgi_binary'));
-        $this->addOption('cgi-program', 'cgi', InputOption::VALUE_REQUIRED, 'Path to the program that should be spawned.', '/usr/bin/php-cgi', $this->getContainer()->getParameter('cgi_program'));
-        $this->addOption('fcgi-socket-path', 'fcgi-socket', InputOption::VALUE_REQUIRED, 'Path to fcgi process Socket.', '/tmp/test.int.socket', $this->getContainer()->getParameter('fcgi_socket_path'));
-        $this->addOption('fcgi-user', 'user', InputOption::VALUE_REQUIRED, 'The username that spawns the fcgi process.', $this->getContainer()->get('fcgi_user'));
-        $this->addOption('fcgi-group', 'group', InputOption::VALUE_REQUIRED, 'The groupname that spawns the fcgi process.', $this->getContainer()->get('fcgi_group'));
-        $this->addOption('allowed-env', 'env', InputOption::VALUE_OPTIONAL, 'The environment variables to pass to the fcgi handler.', null);
-        $this->addOption('php-additional-ini-dir', 'phprc', InputOption::VALUE_OPTIONAL, 'Path to additional folder to search ini files from. PHP Process specific setting.', null);
-        $this->addOption('php-fcgi-children', 'fcgi-children',  InputOption::VALUE_REQUIRED, 'PHP Process specific setting.', 5);
-        $this->addOption('php-fcgi-max-requests', 'max-requests',  InputOption::VALUE_REQUIRED, 'PHP Process specific setting.', 1000);
-        $this->addOption('fcgi-webserver-address', 'webserver address', InputOption::VALUE_REQUIRED, 'The fcgi daemons webserver address.', '127.0.0.1');
+        $this->addOption('spawn-fcgi-binary', 'spawn-fcgi', InputOption::VALUE_OPTIONAL, 'Path to the SPAWN-FCGI executable (usually shipped with lighty.)');
+        $this->addOption('cgi-program', 'cgi', InputOption::VALUE_OPTIONAL, 'Path to the program that should be spawned.');
+        $this->addOption('fcgi-socket-path', 'null', InputOption::VALUE_OPTIONAL, 'Path to fcgi process Socket.');
+        $this->addOption('fcgi-user', 'user', InputOption::VALUE_OPTIONAL, 'The username that spawns the fcgi process.');
+        $this->addOption('fcgi-group', 'group', InputOption::VALUE_OPTIONAL, 'The groupname that spawns the fcgi process.');
+        $this->addOption('allowed-env', 'env', InputOption::VALUE_OPTIONAL, 'The environment variables to pass to the fcgi handler.');
+        $this->addOption('php-additional-ini-dir', 'phprc', InputOption::VALUE_OPTIONAL, 'Path to additional folder to search ini files from. PHP Process specific setting.');
+        $this->addOption('php-fcgi-children', 'fcgi-children',  InputOption::VALUE_OPTIONAL, 'PHP Process specific setting.');
+        $this->addOption('php-fcgi-max-requests', 'max-requests',  InputOption::VALUE_OPTIONAL, 'PHP Process specific setting.');
+        $this->addOption('fcgi-webserver-address', 'webserver address', InputOption::VALUE_OPTIONAL, 'The fcgi daemons webserver address.');
     }
 
     /**
@@ -56,18 +47,29 @@ class Start extends SpawnFcgiCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output) 
     {
+        $spawn_fcgi_binary = $input->getOption('spawn-fcgi-binary') ? $input->getOption('spawn-fcgi-binary') : $this->getContainer()->getParameter('codemitte_spawn_fcgi.spawn_fcgi_binary');
+        $cgi_program = $input->getOption('cgi-program') ? $input->getOption('cgi-program') : $this->getContainer()->getParameter('codemitte_spawn_fcgi.cgi_program');
+        $fcgi_socket_path = $input->getOption('fcgi-socket-path') ? $input->getOption('fcgi-socket-path') : $this->getContainer()->getParameter('codemitte_spawn_fcgi.fcgi_socket_path');
+        $fcgi_user = $input->getOption('fcgi-user') ? $input->getOption('fcgi-user') : $this->getContainer()->getParameter('codemitte_spawn_fcgi.fcgi_user');
+        $fcgi_group = $input->getOption('fcgi-group') ? $input->getOption('fcgi-group') : $this->getContainer()->getParameter('codemitte_spawn_fcgi.fcgi_group');
+        $allowed_env = $input->getOption('allowed-env') ? $input->getOption('allowed-env') : $this->getContainer()->getParameter('codemitte_spawn_fcgi.allowed_env');
+        $php_additional_ini_dir = $input->getOption('php-additional-ini-dir') ? $input->getOption('php-additional-ini-dir') : $this->getContainer()->getParameter('codemitte_spawn_fcgi.php_additional_ini_dir');
+        $php_fcgi_children = $input->getOption('php-fcgi-children') ? $input->getOption('php-fcgi-children') : $this->getContainer()->getParameter('codemitte_spawn_fcgi.php_fcgi_children');
+        $php_fcgi_max_requests = $input->getOption('php-fcgi-max-requests') ? $input->getOption('php-fcgi-max-requests') : $this->getContainer()->getParameter('codemitte_spawn_fcgi.php_fcgi_max_requests');
+        $fcgi_webserver_address = $input->getOption('fcgi-webserver-address') ? $input->getOption('fcgi-webserver-address') : $this->getContainer()->getParameter('codemitte_spawn_fcgi.fcgi_webserver_address');
+
         $processBuilder = new ProcessBuilder(array(
-            $input->getOption('spawn-fcgi-binary'),
-            '-s' . $input->getOption('fcgi-socket-path'),
-            "-f{$input->getOption('cgi-program')}",
-            "-u{$input->getOption('fcgi-user')}",
-            "-g{$input->getOption('fcgi-group')}",
-            "-C{$input->getOption('php-fcgi-children')}"
+            $spawn_fcgi_binary,
+            '-s' . $fcgi_socket_path,
+            "-f{$cgi_program}",
+            "-u{$fcgi_user}",
+            "-g{$fcgi_group}",
+            "-C{$php_fcgi_children}"
         ));
 
         $allowedEnv = array_merge(
                 explode(' ', 'PATH USER'),
-                explode(' ', $input->getOption('allowed-env')),
+                explode(' ', $allowed_env),
                 explode(' ', 'PHP_FCGI_MAX_REQUESTS FCGI_WEB_SERVER_ADDRS PHPRC')
         ); 
         
@@ -83,9 +85,9 @@ class Start extends SpawnFcgiCommand
             }
         }
 
-        $processBuilder->setEnv('PHP_FCGI_MAX_REQUESTS', $input->getOption('php-fcgi-max-requests'));
-        $processBuilder->setEnv('FCGI_WEB_SERVER_ADDRS', $input->getOption('fcgi-webserver-address'));
-        $processBuilder->setEnv('PHPRC', $input->getOption('php-additional-ini-dir'));
+        $processBuilder->setEnv('PHP_FCGI_MAX_REQUESTS', $php_fcgi_max_requests);
+        $processBuilder->setEnv('FCGI_WEB_SERVER_ADDRS', $fcgi_webserver_address);
+        $processBuilder->setEnv('PHPRC', $php_additional_ini_dir);
 
         $process = $processBuilder->getProcess();
 
