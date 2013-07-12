@@ -3,9 +3,9 @@ namespace Codemitte\Bundle\SpawnFcgiBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\Console\Application;
-use Codemitte\Command\Start;
-use Codemitte\Command\Stop;
-use Codemitte\Command\Restart;
+use Codemitte\Bundle\SpawnFcgiBundle\Command\Start;
+use Codemitte\Bundle\SpawnFcgiBundle\Command\Stop;
+use Codemitte\Bundle\SpawnFcgiBundle\Command\Restart;
 
 /**
  * Description of SpawnFcgiBundle
