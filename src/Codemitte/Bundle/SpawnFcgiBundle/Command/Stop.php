@@ -34,7 +34,7 @@ class Stop extends SpawnFcgiCommand
         
         $pid = file_get_contents('.spawn-fcgi');
         
-        $process = new Process("kill $pid");
+        $process = new Process("kill -KILL $pid");
         
         $process->run();
         
